@@ -18,6 +18,7 @@ package com.example.android.android_me.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,16 @@ import android.widget.ImageView;
 import com.example.android.android_me.R;
 import com.example.android.android_me.data.AndroidImageAssets;
 
+import java.util.List;
+
 public class BodyPartFragment extends Fragment {
 
-    // TODO (1) Create a setter method and class variable to set and store of a list of image resources
-
-    // TODO (2) Create another setter method and variable to track and set the index of the list item to display
+    // COMPLETED Create a setter method and class variable to set and store of a list of image resources
+    // COMPLETED Create another setter method and variable to track and set the index of the list item to display
         // ex. index = 0 is the first image id in the given list , index 1 is the second, and so on
+    private List<Integer> imageResourceIds;
+    private Integer imageResourceIndex;
+    public static final String TAG = BodyPartFragment.class.getSimpleName();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the fragment
@@ -52,13 +57,40 @@ public class BodyPartFragment extends Fragment {
         ImageView imageView = (ImageView) rootView.findViewById(R.id.body_part_image_view);
 
         // Set the image to the first in our list of head images
-        imageView.setImageResource(AndroidImageAssets.getHeads().get(0));
+        //imageView.setImageResource(AndroidImageAssets.getHeads().get(0));
 
-        // TODO (3) If a list of image ids exists, set the image resource to the correct item in that list
+        // COMPLETED If a list of image ids exists, set the image resource to the correct item in that list
         // Otherwise, create a Log statement that indicates that the list was not found
+        if (imageResourceIds != null && imageResourceIndex != null) {
+            imageView.setImageResource(imageResourceIds.get(imageResourceIndex));
+        }
+        else {
+            Log.e(TAG, "Can't show image because of incorrect imageResourceIds "
+                    + imageResourceIds + " or imageResourceIndex " + imageResourceIndex);
+        }
 
         // Return the rootView
         return rootView;
     }
 
+    public List<Integer> getImageResourceIds() {
+        return imageResourceIds;
+    }
+
+    public void setImageResourceIds(List<Integer> imageResourceIds) {
+        this.imageResourceIds = imageResourceIds;
+    }
+
+    public Integer getImageResourceIndex() {
+        return imageResourceIndex;
+    }
+
+    public void setImageResourceIndex(Integer imageResourceIndex) {
+        if ((imageResourceIds != null && imageResourceIndex >= imageResourceIds.size()) ||
+                imageResourceIndex < 0) {
+            Log.e(TAG, "Can't set imageResourceIndex of " + imageResourceIndex);
+            return;
+        }
+        this.imageResourceIndex = imageResourceIndex;
+    }
 }
