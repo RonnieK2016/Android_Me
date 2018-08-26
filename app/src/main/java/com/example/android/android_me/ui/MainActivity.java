@@ -16,8 +16,11 @@
 
 package com.example.android.android_me.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.android.android_me.R;
@@ -26,6 +29,10 @@ import com.example.android.android_me.R;
 // Implement the MasterListFragment callback, OnImageClickListener
 public class MainActivity extends AppCompatActivity implements MasterListFragment.OnImageClickListener{
 
+
+    private int headIndex;
+    private int bodyIndex;
+    private int legsIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +46,37 @@ public class MainActivity extends AppCompatActivity implements MasterListFragmen
         // Create a Toast that displays the position that was clicked
         Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
 
-        // TODO (2) Based on where a user has clicked, store the selected list index for the head, body, and leg BodyPartFragments
+        // COMPLETED Based on where a user has clicked, store the selected list index for the head, body, and leg BodyPartFragments
+        int clickedBodyPart = position/12;
+        int listIndex = position - 12*clickedBodyPart;
+        switch (clickedBodyPart) {
+            case 0:
+                headIndex = listIndex;
+                break;
+            case 1:
+                bodyIndex = listIndex;
+                break;
+            case 2:
+                legsIndex = listIndex;
+                break;
+        }
 
-        // TODO (3) Put this information in a Bundle and attach it to an Intent that will launch an AndroidMeActivity
+        // COMPLETED Put this information in a Bundle and attach it to an Intent that will launch an AndroidMeActivity
+        final Bundle outBundle = new Bundle();
+        outBundle.putInt("headIndex", headIndex);
+        outBundle.putInt("bodyIndex", bodyIndex);
+        outBundle.putInt("legsIndex", legsIndex);
 
-        // TODO (4) Get a reference to the "Next" button and launch the intent when this button is clicked
-
+        // COMPLETED Get a reference to the "Next" button and launch the intent when this button is clicked
+        Button nextButton = findViewById(R.id.next_button);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent androidMeActivityIntent = new Intent(MainActivity.this, AndroidMeActivity.class);
+                androidMeActivityIntent.putExtras(outBundle);
+                MainActivity.this.startActivity(androidMeActivityIntent);
+            }
+        });
     }
 
 }
